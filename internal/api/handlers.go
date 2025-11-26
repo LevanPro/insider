@@ -70,7 +70,7 @@ func (app *App) StartScheduler(w http.ResponseWriter, r *http.Request) {
 // @Failure      409  {object} map[string]string
 // @Router       /api/v1/scheduler/stop [post]
 func (app *App) StopScheduler(w http.ResponseWriter, r *http.Request) {
-	err := app.scheduler.Start()
+	err := app.scheduler.Stop()
 
 	message := "scheduler has stopped"
 	statusCode := http.StatusOK

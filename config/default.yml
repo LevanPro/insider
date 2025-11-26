@@ -1,0 +1,20 @@
+web:
+  address: "localhost:3000"
+  read_timeout: 5s
+  write_timeout: 10s
+  idle_timeout: 120s
+  shutdown_timeout: 5s
+db:
+  user: postgres
+  password: postgres
+  host: localhost
+  name: useinsider
+  max_idle_conns: 10
+  max_open_conns: 25  
+  disable_tls: true
+application:
+  webhook_url:
+  webhook_auth_key:
+  batch_size:
+  interval_seconds:
+  scheduler_immediate:   

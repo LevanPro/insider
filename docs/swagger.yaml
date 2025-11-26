@@ -36,6 +36,63 @@ info:
   title: UseInsder Message Sender API
   version: "1.0"
 paths:
+  /api/v1/scheduler/start:
+    post:
+      description: Starts background job that every 2 minutes sends 2 unsent messages
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Start automatic message sending
+      tags:
+      - scheduler
+  /api/v1/scheduler/status:
+    get:
+      description: Returns scheduler state
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get scheduler status
+      tags:
+      - scheduler
+  /api/v1/scheduler/stop:
+    post:
+      description: Stop background job that sends every 2 minutes sends 2 unsent messages
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Stop automatic message sending
+      tags:
+      - scheduler
   /messages/sent:
     get:
       description: Returns a paginated list of messages with status = sent
@@ -64,25 +121,6 @@ paths:
       summary: List sent messages
       tags:
       - messages
-  /scheduler/start:
-    post:
-      description: Stop background job that sends every 2 minutes sends 2 unsent messages
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-        "409":
-          description: Conflict
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Stop automatic message sending
-      tags:
-      - scheduler
 schemes:
 - http
 swagger: "2.0"

@@ -21,6 +21,7 @@ RUN rm -rf /var/cache/apk/* && \
 WORKDIR /app
 
 COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/docs ./docs
 COPY --from=builder /app/app .
 
 

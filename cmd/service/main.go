@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"os"
 
-	_ "github.com/LevanPro/insider/docs"
 	"github.com/LevanPro/insider/internal/api"
 )
 

@@ -9,6 +9,9 @@ run:
 test:
 	go test ./...
 
+test-race:
+	go test -race ./...
+
 tidy:
 	go mod tidy
 	go mod vendor
@@ -26,20 +29,30 @@ db-seed-local:
 		INSERT INTO messages (\"to\", content) VALUES \
 		('+905551111111', 'Hello from seed 1'), \
 		('+905552222222', 'Hello from seed 2'), \
-		('+905553333333', 'Hello from seed 3');"
+		('+905552222223', 'Hello from seed 3'), \
+		('+905552222224', 'Hello from seed 4'), \
+		('+905552222225', 'Hello from seed 5'), \
+		('+905552222226', 'Hello from seed 6'), \
+		('+905552222227', 'Hello from seed 7'), \
+		('+905553333338', 'Hello from seed 8');"
 
 db-seed:
 	docker-compose exec db psql -U postgres -d useinsider -c "\
 		INSERT INTO messages (\"to\", content) VALUES \
 		('+905551111111', 'Hello from seed 1'), \
 		('+905552222222', 'Hello from seed 2'), \
-		('+905553333333', 'Hello from seed 3');"
+		('+905552222223', 'Hello from seed 3'), \
+		('+905552222224', 'Hello from seed 4'), \
+		('+905552222225', 'Hello from seed 5'), \
+		('+905552222226', 'Hello from seed 6'), \
+		('+905552222227', 'Hello from seed 7'), \
+		('+905553333338', 'Hello from seed 8');"
+
+docker-logs:
+
 
 swag:
 	swag init \
   	-g cmd/service/main.go \
-  	-o docs
-
-docker-logs:
-
+  	-o ./docs
 

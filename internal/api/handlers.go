@@ -16,7 +16,7 @@ import (
 // @Tags         scheduler
 // @Success      200  {object} map[string]string
 // @Failure      500  {object} map[string]string
-// @Router       /scheduler/status [get]
+// @Router       /api/v1/scheduler/status [get]
 func (app *App) SchedulerStatus(w http.ResponseWriter, r *http.Request) {
 	status := app.scheduler.IsRunning()
 	statusCode := http.StatusOK
@@ -38,7 +38,7 @@ func (app *App) SchedulerStatus(w http.ResponseWriter, r *http.Request) {
 // @Tags         scheduler
 // @Success      200  {object} map[string]string
 // @Failure      409  {object} map[string]string
-// @Router       /scheduler/start [post]
+// @Router       /api/v1/scheduler/start [post]
 func (app *App) StartScheduler(w http.ResponseWriter, r *http.Request) {
 	err := app.scheduler.Start()
 
@@ -68,7 +68,7 @@ func (app *App) StartScheduler(w http.ResponseWriter, r *http.Request) {
 // @Tags         scheduler
 // @Success      200  {object} map[string]string
 // @Failure      409  {object} map[string]string
-// @Router       /scheduler/start [post]
+// @Router       /api/v1/scheduler/stop [post]
 func (app *App) StopScheduler(w http.ResponseWriter, r *http.Request) {
 	err := app.scheduler.Start()
 

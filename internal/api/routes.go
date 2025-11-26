@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -20,7 +22,11 @@ func (app *App) setupRoutes() *chi.Mux {
 	router.Get("/debug/liveness", app.Liveness)
 	router.Get("/debug/readiness", app.Readiness)
 
-	router.Get("/swagger/*", httpSwagger.WrapHandler)
+	//Handle swagger
+	router.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("docs"))))
+	router.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/static/swagger.json"),
+	))
 
 	return router
 }

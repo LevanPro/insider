@@ -77,8 +77,6 @@ func (s *Scheduler) Stop() error {
 
 	close(s.quit)
 	s.running = false
-	s.ticker = nil
-	s.quit = nil
 
 	return nil
 }

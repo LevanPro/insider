@@ -1,2 +1,2 @@
 # insider
-Insider Project
+Use Insider

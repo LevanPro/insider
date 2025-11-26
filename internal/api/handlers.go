@@ -10,6 +10,28 @@ import (
 	"github.com/LevanPro/insider/internal/infra/database"
 )
 
+// SchedulerStatus godoc
+// @Summary      Get scheduler status
+// @Description  Returns scheduler state
+// @Tags         scheduler
+// @Success      200  {object} map[string]string
+// @Failure      500  {object} map[string]string
+// @Router       /scheduler/status [get]
+func (app *App) SchedulerStatus(w http.ResponseWriter, r *http.Request) {
+	status := app.scheduler.IsRunning()
+	statusCode := http.StatusOK
+
+	data := struct {
+		Status bool `json:"running"`
+	}{
+		Status: status,
+	}
+
+	if err := response(w, statusCode, data); err != nil {
+		app.log.Errorw("SchedulerStatus", "ERROR", err)
+	}
+}
+
 // StartScheduler godoc
 // @Summary      Start automatic message sending
 // @Description  Starts background job that every 2 minutes sends 2 unsent messages

@@ -40,6 +40,16 @@ func (r *PostgresMessageRepository) MarkAsSent(ctx context.Context, id int64, se
 	return err
 }
 
+func (r *PostgresMessageRepository) MarkAsFailed(ctx context.Context, id int64) error {
+	_, err := r.db.ExecContext(ctx, `
+      UPDATE messages
+      SET status = 'failed',
+          updated_at = NOW()
+      WHERE id = $1
+    `, id)
+	return err
+}
+
 func (r *PostgresMessageRepository) ListSent(
 	ctx context.Context,
 	limit, offset int,

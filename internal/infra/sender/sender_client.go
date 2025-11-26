@@ -62,7 +62,7 @@ func (c *Client) Send(ctx context.Context, to, content string) (*service.SendRes
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusAccepted {
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusAccepted {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 

@@ -112,7 +112,7 @@ func (s *MessageService) processMessage(ctx context.Context, workerID int, msg d
 		"messageID", msg.ID,
 		"to", msg.To)
 
-	// TODO:: need to think of what do to with such messages
+	// TODO:: need to think of what do to with such messages also if phone number is not in correct format
 	if len(msg.Content) > 160 {
 		s.log.Warnw("message content exceeds 160 characters", "workerID", workerID, "messageID", msg.ID, "length", len(msg.Content))
 		return
@@ -122,6 +122,7 @@ func (s *MessageService) processMessage(ctx context.Context, workerID int, msg d
 	resp, err := s.sender.Send(ctx, msg.To, msg.Content)
 	if err != nil {
 		s.log.Errorw("Failed to send message", "workerID", workerID, "messageID", msg.ID, "error", err)
+		s.repo.MarkAsFailed(ctx, msg.ID)
 		return
 	}
 

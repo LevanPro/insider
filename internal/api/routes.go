@@ -14,6 +14,7 @@ func (app *App) setupRoutes() *chi.Mux {
 
 	router.Post("/api/v1/scheduler/start", app.StartScheduler)
 	router.Post("/api/v1/scheduler/stop", app.StopScheduler)
+	router.Get("/api/v1/scheduler/status", app.SchedulerStatus)
 	router.Get("/api/v1/messages/sent", app.GetSentMessages)
 
 	router.Get("/debug/liveness", app.Liveness)

@@ -12,13 +12,19 @@ import (
 	"github.com/LevanPro/insider/internal/config"
 	"github.com/LevanPro/insider/internal/infra/database"
 	"github.com/LevanPro/insider/internal/infra/logger"
+	"github.com/LevanPro/insider/internal/infra/scheduler"
+	"github.com/LevanPro/insider/internal/infra/sender"
+	"github.com/LevanPro/insider/internal/repository"
+	"github.com/LevanPro/insider/internal/service"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 type App struct {
-	log *zap.SugaredLogger
-	db  *sqlx.DB
+	log       *zap.SugaredLogger
+	db        *sqlx.DB
+	service   *service.MessageService
+	scheduler *scheduler.Scheduler
 }
 
 func Run() error {
@@ -63,7 +69,19 @@ func Run() error {
 	}()
 	// =========================================================================
 
-	app := &App{db: db, log: log}
+	postgresMessageRepo := repository.NewPostgresMessageRepository(db)
+	senderClient := sender.NewClient(cfg.Application.WebhookURL, cfg.Application.WebhookAuthKey)
+
+	messageService := service.NewMessageService(postgresMessageRepo, senderClient, cfg.Application.BatchSize, cfg.Application.NumberOfWorkers, log)
+	scheduler := scheduler.NewScheduler(messageService.ProcessNextUnsent, cfg.Application.SchedulerInterval, cfg.Application.SchedulerStartImmediate)
+	scheduler.Start()
+
+	app := &App{
+		db:        db,
+		log:       log,
+		scheduler: scheduler,
+		service:   messageService,
+	}
 
 	api := http.Server{
 		Addr:         cfg.Web.Address,

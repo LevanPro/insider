@@ -9,8 +9,9 @@ import (
 )
 
 type Config struct {
-	Web `yaml:"web"`
-	DB  `yaml:"db"`
+	Web         `yaml:"web"`
+	DB          `yaml:"db"`
+	Application `yaml:"application"`
 }
 
 type Web struct {
@@ -29,6 +30,15 @@ type DB struct {
 	MaxIdleConns int    `yaml:"max_idle_conns" env-default:"0"`
 	MaxOpenConns int    `yaml:"max_open_conns" env-default:"0"`
 	DisableTLS   bool   `yaml:"disable_tls" env-default:"true"`
+}
+
+type Application struct {
+	WebhookURL              string        `yaml:"webhook_url" env-required:""`
+	WebhookAuthKey          string        `yaml:"webhook_auth_key" env-required:""`
+	BatchSize               int           `yaml:"batch_size" env-default:"2"`
+	SchedulerInterval       time.Duration `yaml:"interval_seconds" env-default:"120s"`
+	SchedulerStartImmediate bool          `yaml:"scheduler_immediate" env-default:"true"`
+	NumberOfWorkers         int           `yaml:"scheduler_immediate" env-default:"2"`
 }
 
 func Load() (*Config, error) {

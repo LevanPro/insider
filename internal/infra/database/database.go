@@ -2,19 +2,11 @@ package database
 
 import (
 	"context"
-	"errors"
 	"net/url"
 	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-)
-
-var (
-	ErrNotFound              = errors.New("not found")
-	ErrInvalidID             = errors.New("ID is not in the correct format")
-	ErrAuthenticationFailure = errors.New("authentication failed")
-	ErrForbidden             = errors.New("forbidden")
 )
 
 type Config struct {

@@ -19,3 +19,8 @@ db:
 	-e POSTGRES_DB=useinsider \
 	-p 5432:5432 \
 	-d postgres	
+
+swag:
+	swag init \
+  	-g cmd/service/main.go \
+  	-o docs

@@ -1,0 +1,88 @@
+basePath: /
+definitions:
+  domain.Message:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      externalID:
+        type: string
+      id:
+        type: integer
+      sentAt:
+        type: string
+      status:
+        $ref: '#/definitions/domain.MessageStatus'
+      to:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  domain.MessageStatus:
+    enum:
+    - pending
+    - sent
+    - failed
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusSent
+    - StatusFailed
+host: localhost:8080
+info:
+  contact: {}
+  description: Automatic 2-minute message sending service.
+  title: UseInsder Message Sender API
+  version: "1.0"
+paths:
+  /messages/sent:
+    get:
+      description: Returns a paginated list of messages with status = sent
+      parameters:
+      - description: Limit (default 50)
+        in: query
+        name: limit
+        type: integer
+      - description: Offset (default 0)
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Message'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List sent messages
+      tags:
+      - messages
+  /scheduler/start:
+    post:
+      description: Stop background job that sends every 2 minutes sends 2 unsent messages
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "409":
+          description: Conflict
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Stop automatic message sending
+      tags:
+      - scheduler
+schemes:
+- http
+swagger: "2.0"

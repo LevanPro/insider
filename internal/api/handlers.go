@@ -4,21 +4,96 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/LevanPro/insider/internal/infra/database"
 )
 
+// StartScheduler godoc
+// @Summary      Start automatic message sending
+// @Description  Starts background job that every 2 minutes sends 2 unsent messages
+// @Tags         scheduler
+// @Success      200  {object} map[string]string
+// @Failure      409  {object} map[string]string
+// @Router       /scheduler/start [post]
 func (app *App) StartScheduler(w http.ResponseWriter, r *http.Request) {
+	err := app.scheduler.Start()
 
+	message := "scheduler has started"
+	statusCode := http.StatusOK
+
+	// Need checking not expose internal errors
+	if err != nil {
+		message = err.Error()
+		statusCode = http.StatusConflict
+	}
+
+	data := struct {
+		Message string `json:"message"`
+	}{
+		Message: message,
+	}
+
+	if err := response(w, statusCode, data); err != nil {
+		app.log.Errorw("StartScheduler", "ERROR", err)
+	}
 }
 
+// StopScheduler godoc
+// @Summary      Stop automatic message sending
+// @Description  Stop background job that sends every 2 minutes sends 2 unsent messages
+// @Tags         scheduler
+// @Success      200  {object} map[string]string
+// @Failure      409  {object} map[string]string
+// @Router       /scheduler/start [post]
 func (app *App) StopScheduler(w http.ResponseWriter, r *http.Request) {
+	err := app.scheduler.Start()
 
+	message := "scheduler has stopped"
+	statusCode := http.StatusOK
+
+	// Need checking not expose internal errors
+	if err != nil {
+		message = err.Error()
+		statusCode = http.StatusConflict
+	}
+
+	data := struct {
+		Message string `json:"message"`
+	}{
+		Message: message,
+	}
+
+	if err := response(w, statusCode, data); err != nil {
+		app.log.Errorw("StopScheduler", "ERROR", err)
+	}
 }
 
+// GetSentMessages godoc
+// @Summary      List sent messages
+// @Description  Returns a paginated list of messages with status = sent
+// @Tags         messages
+// @Param        limit   query   int   false  "Limit (default 50)"
+// @Param        offset  query   int   false  "Offset (default 0)"
+// @Success      200  {array}  domain.Message
+// @Failure      500  {object} map[string]string
+// @Router       /messages/sent [get]
 func (app *App) GetSentMessages(w http.ResponseWriter, r *http.Request) {
+	limit := parseIntQuery(r, "limit", 50)
+	offset := parseIntQuery(r, "offset", 0)
 
+	msgs, err := app.service.ListSent(r.Context(), limit, offset)
+	if err != nil {
+		err = response(w, http.StatusInternalServerError, map[string]interface{}{
+			"error": "something went wrong",
+		})
+		return
+	}
+
+	if err := response(w, http.StatusOK, msgs); err != nil {
+		app.log.Errorw("liveness", "ERROR", err)
+	}
 }
 
 func (app *App) Liveness(w http.ResponseWriter, r *http.Request) {
@@ -72,4 +147,16 @@ func response(w http.ResponseWriter, statusCode int, data interface{}) error {
 	}
 
 	return nil
+}
+
+func parseIntQuery(r *http.Request, key string, def int) int {
+	raw := r.URL.Query().Get(key)
+	if raw == "" {
+		return def
+	}
+	n, err := strconv.Atoi(raw)
+	if err != nil || n < 0 {
+		return def
+	}
+	return n
 }

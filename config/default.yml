@@ -1,5 +1,5 @@
 web:
-  address: "localhost:3000"
+  address: "localhost:8080"
   read_timeout: 5s
   write_timeout: 10s
   idle_timeout: 120s
@@ -13,8 +13,9 @@ db:
   max_open_conns: 25  
   disable_tls: true
 application:
-  webhook_url:
-  webhook_auth_key:
-  batch_size:
-  interval_seconds:
-  scheduler_immediate:   
+  webhook_url: "https://webhook.site/7197d344-1fc6-4c3f-bdef-a140616058cb"
+  webhook_auth_key: "INS.me1x9uMcyYGlhKKQVPoc.bO3j9aZwRTOcA2Ywo"
+  batch_size: 2
+  interval_seconds: "120s"
+  scheduler_immediate: true
+  num_workers: 2

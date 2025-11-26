@@ -69,6 +69,14 @@ func Run() error {
 	}()
 	// =========================================================================
 
+	// ========== Run migrations =========================================
+
+	err = database.RunMigrations(db)
+	if err != nil {
+		return fmt.Errorf("error running migrations: %w", err)
+	}
+
+	// ===================================================================
 	postgresMessageRepo := repository.NewPostgresMessageRepository(db)
 	senderClient := sender.NewClient(cfg.Application.WebhookURL, cfg.Application.WebhookAuthKey)
 

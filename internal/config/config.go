@@ -38,7 +38,7 @@ type Application struct {
 	BatchSize               int           `yaml:"batch_size" env-default:"2"`
 	SchedulerInterval       time.Duration `yaml:"interval_seconds" env-default:"120s"`
 	SchedulerStartImmediate bool          `yaml:"scheduler_immediate" env-default:"true"`
-	NumberOfWorkers         int           `yaml:"scheduler_immediate" env-default:"2"`
+	NumberOfWorkers         int           `yaml:"num_workers" env-default:"2"`
 }
 
 func Load() (*Config, error) {

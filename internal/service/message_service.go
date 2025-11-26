@@ -42,6 +42,7 @@ func (s *MessageService) ProcessNextUnsent(ctx context.Context) error {
 
 	msgs, err := s.repo.GetNextUnsent(ctx, s.batchSize)
 	if err != nil {
+		s.log.Errorw("ProcessNextUnsent", "ERROR", err)
 		return ErrGetMessageFail
 	}
 

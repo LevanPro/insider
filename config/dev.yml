@@ -7,7 +7,7 @@ web:
 db:
   user: postgres
   password: postgres
-  host: localhost
+  host: db
   name: useinsider
   max_idle_conns: 10
   max_open_conns: 25  

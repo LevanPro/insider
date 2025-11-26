@@ -91,7 +91,9 @@ func (app *App) GetSentMessages(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := response(w, http.StatusOK, msgs); err != nil {
+	if err := response(w, http.StatusOK, map[string]any{
+		"data": msgs,
+	}); err != nil {
 		app.log.Errorw("liveness", "ERROR", err)
 	}
 }
